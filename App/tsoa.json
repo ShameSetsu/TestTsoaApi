@@ -1,0 +1,17 @@
+{
+  "swagger": {
+    "name": "WebApi",
+    "description": "",
+    "version": "1.0.0",
+    "schemes": [ "http" ],
+    "outputDirectory": "./dist",
+    "entryFile": "./src/server.ts",
+    "host": "localhost:3000",
+    "basePath": "/api"
+  },
+  "routes": {
+    "basePath": "/api",
+    "entryFile": "./src/server.ts",
+    "routesDir": "./src"
+  }
+}
