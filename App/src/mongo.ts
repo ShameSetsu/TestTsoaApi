@@ -32,12 +32,15 @@ export class Mongo {
                 
                 console.log("dbCreated");
                 let dbo = db.db('database');
-                let request: string = '{"'+field+'": { "$all": [';
-                typeof value == 'string'? request += '"'+value+'"' : request+= value;
-                request += ']}}';
-                console.log('request', request);    
+                let request: string = '{}';
+                if(value){
+                    request = '{"'+field+'": { "$all": [';
+                    typeof value == 'string'? request += '"'+value+'"' : request+= value;
+                    request += ']}}';
+                }
+                console.log('request', request);
                 
-                dbo.collection(collection).find(JSON.parse(request)).skip(offset).limit(limit).toArray().then(res=>{
+                dbo.collection(collection).find(request? JSON.parse(request) : null).skip(offset).limit(limit).toArray().then(res=>{
                     resolve(res);
                 });
             });
