@@ -1,44 +1,42 @@
-import { Route, Controller, Query, Get, Post, Body } from "tsoa";
-import { MangaInfo, isManga } from "../models/mangaInfo.model";
-import { MangaService } from "../services/mangaService";
-import { ApiResponse } from "../models/apiResponse.model";
-import { Mongo } from "../mongo";
-const uuidv1 = require('uuid/v1');
+import { Body, Controller, Get, Post, Query, Route } from 'tsoa';
 
+import { ApiResponse } from '../models/apiResponse.model';
+import { isManga, MangaInfo } from '../models/mangaInfo.model';
+import { Mongo } from '../mongo';
 
 @Route('manga')
 export class MangaController extends Controller {
 
     mongo: Mongo = new Mongo();
 
-    @Get()
-    public async getManga(): Promise<MangaInfo> {
+    @Get('page/{page}')
+    public async getMangaPage(page: number, @Query() tag?: string): Promise<Array<MangaInfo>> {
         // return await new MangaService().getManga();
-        console.log('getManga');
+        console.log('getManga', page +' '+tag);
+        return new Promise<Array<MangaInfo>>((resolve, reject)=>{
+            this.mongo.findInArray('manga', 'tags', tag, (page - 1) * 20, 20).then(res=>{
+                resolve(<Array<MangaInfo>>res);
+            });
+        });
+    }
+
+    @Get('{id}')
+    public async getManga(id: string): Promise<MangaInfo> {
+        // return await new MangaService().getManga();
+        console.log('getManga', id);
         return new Promise<MangaInfo>((resolve, reject)=>{
-            console.log('Promise');
-            resolve(<MangaInfo>{
-                title: 'title',
-                author: 'author',
-                characters: ['Aya', 'Momiji'],
-                tags: ['yuri'],
-                nbPage: 20
+            this.mongo.findById('manga', id).then(res=>{
+                resolve(<MangaInfo>res);
             });
         });
     }
 
     @Post()
-    public async postManga(@Body() requestBody: any): Promise<ApiResponse> {
+    public async postManga(@Body() requestBody: MangaInfo): Promise<ApiResponse> {
         console.log('requestBody', requestBody);
-        return new Promise<ApiResponse>((resolve, reject)=>{
-            let manga = {
-                title: 'title',
-                author: 'author',
-                characters: ['Aya', 'Momiji'],
-                tags: ['yuri'],
-                nbPage: 20
-            }
-            if(isManga(requestBody)){
+        return new Promise<any>((resolve, reject)=>{
+
+            if(isManga(requestBody)) {
                 this.setStatus(400);
                 resolve(<ApiResponse>{
                     success: false,
@@ -46,7 +44,7 @@ export class MangaController extends Controller {
                     requestPayload: requestBody
                 });
             }
-            
+
             this.mongo.insert('manga', requestBody).then(res=>{
                 resolve(<ApiResponse>{
                     success: true,
@@ -54,7 +52,6 @@ export class MangaController extends Controller {
                     requestPayload: requestBody
                 });
             });
-                
         });
     }
 }

@@ -1,8 +1,7 @@
 import * as http from 'http';
 import App from './app';
 import './controllers/mangaController';
-
-
+import './controllers/pageController';
 
 const port = 3000;
 App.set('port', port);
