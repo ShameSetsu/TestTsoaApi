@@ -7,6 +7,7 @@ class App {
 
     constructor(){
         this.express = express();
+        this.express.use(express.static('public'))
         this.middleware();
         this.routes();
     }
@@ -14,7 +15,6 @@ class App {
     private middleware(): void {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: true }));
-        
         this.express.use((req, res, next) => {
             console.log('express allow control')
 			res.header("Access-Control-Allow-Origin", "*");

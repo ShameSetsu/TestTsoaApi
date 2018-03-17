@@ -3,9 +3,10 @@ export interface MangaInfo {
     author: string,
     tags: Array<string>,
     characters: Array<string>,
-    nbPage: number
+    nbPage: number,
+    thumbnail: string
 }
 
 export function isManga(object: any): boolean{
-    return (object.title && object.author && object.tags && object.characters && object.nbPage);
+    return (object.title && object.author && object.tags && object.characters && object.nbPage && object.thumbnail);
 }
