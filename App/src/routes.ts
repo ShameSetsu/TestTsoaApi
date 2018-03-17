@@ -5,19 +5,20 @@ import { MangaController } from './controllers/mangaController';
 const models: TsoaRoute.Models = {
     "MangaInfo": {
         "properties": {
-            "id": { "dataType": "double", "required": true },
             "title": { "dataType": "string", "required": true },
             "author": { "dataType": "string", "required": true },
             "tags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
             "characters": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "nbPage": { "dataType": "double", "required": true },
         },
+    },
+    "ApiResponse": {
     },
 };
 
 export function RegisterRoutes(app: any) {
     app.get('/api/manga',
         function(request: any, response: any, next: any) {
-            console.log('get Manga');
             const args = {
             };
 
@@ -32,6 +33,25 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.getManga.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/api/manga',
+        function(request: any, response: any, next: any) {
+            const args = {
+                requestBody: { "in": "body", "name": "requestBody", "required": true, "dataType": "any" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new MangaController();
+
+
+            const promise = controller.postManga.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, next);
         });
 
