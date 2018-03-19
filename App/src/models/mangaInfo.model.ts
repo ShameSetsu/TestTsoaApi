@@ -8,5 +8,7 @@ export interface MangaInfo {
 }
 
 export function isManga(object: any): boolean{
+    console.log(object.thumbnail);
+    console.log(object.thumbnail? true : false)
     return (object.title && object.author && object.tags && object.characters && object.nbPage && object.thumbnail);
 }

@@ -13,7 +13,7 @@ export class PageController {
         console.log('requestBody', JSON.stringify(requestBody));
         return new Promise<ApiResponse>((resolve, reject)=>{
 
-            if(isMangaPage(requestBody)) {
+            if(!isMangaPage(requestBody)) {
                 this.setStatus(400);
                 resolve(<ApiResponse>{
                     success: false,

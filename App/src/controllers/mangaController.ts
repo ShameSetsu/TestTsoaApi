@@ -36,22 +36,22 @@ export class MangaController extends Controller {
         console.log('requestBody', requestBody);
         return new Promise<any>((resolve, reject)=>{
 
-            if(isManga(requestBody)) {
+            if(!isManga(requestBody)) {
                 this.setStatus(400);
                 resolve(<ApiResponse>{
                     success: false,
                     message: 'Bad parameters',
                     requestPayload: requestBody
                 });
-            }
-
-            this.mongo.insert('manga', requestBody).then(res=>{
-                resolve(<ApiResponse>{
-                    success: true,
-                    message: res,
-                    requestPayload: requestBody
+            }else{
+                this.mongo.insert('manga', requestBody).then(res=>{
+                    resolve(<ApiResponse>{
+                        success: true,
+                        message: res,
+                        requestPayload: requestBody
+                    });
                 });
-            });
+            }
         });
     }
 }
